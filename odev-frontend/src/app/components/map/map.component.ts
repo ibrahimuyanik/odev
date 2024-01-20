@@ -10,6 +10,10 @@ import VectorSource from 'ol/source/Vector';
 import { click } from 'ol/events/condition';
 import { LineString, Point, Polygon } from 'ol/geom';
 import { ApiService } from 'src/app/services/api.service';
+import { jsPanel } from 'jspanel4';
+import { JsPanelService } from 'src/app/services/js-panel.service';
+import { DialogService } from 'src/app/services/dialog.service';
+import { AddCoordinateDialogComponent } from 'src/app/dialog/add-coordinate-dialog/add-coordinate-dialog.component';
 
 @Component({
   selector: 'app-map',
@@ -18,7 +22,9 @@ import { ApiService } from 'src/app/services/api.service';
 })
 export class MapComponent {
 
-  constructor(private apiService:ApiService){}
+  constructor(private apiService: ApiService,
+    private jsPanelService: JsPanelService,
+    private dialogService: DialogService) { }
   map: Map;
 
   ngOnInit() {
@@ -27,7 +33,7 @@ export class MapComponent {
 
   initMap() {
     const turkeyCenter = transform([35.8617, 38.9637], 'EPSG:4326', 'EPSG:3857');
-    
+
     this.map = new Map({
       target: 'map',
       layers: [
@@ -47,26 +53,40 @@ export class MapComponent {
     const vectorLayer = new VectorLayer({
       source: source
     });
-  
+
     this.map.addLayer(vectorLayer);
-  
+
     const draw = new Draw({
       source: source,
       type: 'Polygon',
-      
-    });
-  
-    this.map.addInteraction(draw);
-  
-    draw.on('drawend', async(event:any) => {
-      const drawnFeature = event.feature;
-    let data = drawnFeature.getGeometry().getCoordinates();
-    
-    
-    await this.apiService.create(data)
 
     });
-  
+
+    this.map.addInteraction(draw);
+
+    draw.on('drawend', async (event: any) => {
+
+      const drawnFeature = event.feature;
+          const data = drawnFeature.getGeometry().getCoordinates();
+
+      this.dialogService.openDialog({
+        componentType: AddCoordinateDialogComponent,
+        data: data,
+        afterClosed: () => {
+          
+          
+        }
+      })
+
+
+
+
+
+
+      // await this.apiService.create(data)
+
+    });
+
     // Çizim işlemi bitmeden önce önceki çizim işlemlerini temizle
     draw.on('drawstart', (event: any) => {
       //source.clear();
@@ -86,12 +106,12 @@ export class MapComponent {
   async drawendHandler(event: any) {
     const drawnFeature = event.feature;
     let data = drawnFeature.getGeometry().getCoordinates();
-    
+
     await this.apiService.create(data)
 
 
-  
-    
+
+
     // Çizilen geometrinin türüne bağlı olarak işlemler yapabilirsiniz
     if (drawnFeature.getGeometry() instanceof Point) {
       // Eğer çizilen geometri bir noktaysa
@@ -108,5 +128,5 @@ export class MapComponent {
     }
   }
 
- 
+
 }

@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { firstValueFrom } from 'rxjs';
+import { Observable, firstValueFrom } from 'rxjs';
+import { CoordinateData } from '../contracts/coordinate-data.model';
+import { PaginationCoordinateData } from '../contracts/pagination-coordinate-data.model';
 
 @Injectable({
   providedIn: 'root'
@@ -11,10 +13,10 @@ export class ApiService {
 
   apiUrl = 'https://localhost:7295/api/Coordinates';
 
-  async create(coordinates_data: any){
+  async create(data: Partial<CoordinateData>){
 
    
-    var data = {name:"deneme", number:1, coordinates: coordinates_data}
+    //var data = {name:"deneme", number:1, coordinates: coordinates_data}
     
 var _data = JSON.stringify(data);
 debugger;
@@ -24,6 +26,19 @@ const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     var observable = this.httpClient.post(this.apiUrl, _data, {headers: headers})
 
     await firstValueFrom(observable);
+  }
+
+  async paginationData(page:number, size:number, successCallBack?:() => void, errorCallBack?:(errorMessage) => void){
+
+    const _apiUrl = `${this.apiUrl}/pagination?page=${page}&size=${size}`;
+
+    const observable:Observable<PaginationCoordinateData> = this.httpClient.get<PaginationCoordinateData>(_apiUrl);
+
+    const promiseData = firstValueFrom(observable);
+    promiseData.then(successCallBack)
+    .catch(errorCallBack)
+    return await promiseData;
+
   }
 
 

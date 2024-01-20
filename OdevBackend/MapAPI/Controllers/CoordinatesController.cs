@@ -49,6 +49,13 @@ namespace MapAPI.Controllers
             return Ok(data);
         }
 
+        [HttpGet("pagination")]
+        public async Task<IActionResult> ReadDataTable([FromQuery] Pagination pagination)
+        {
+            var data = _fileService.PaginationCoordinateData(pagination.Page, pagination.Size);
+            return Ok(data);
+        }
+
     }
 }
 

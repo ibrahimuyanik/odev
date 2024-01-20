@@ -72,5 +72,22 @@ namespace MapAPI.Services
             List<CoordinateData> filteredList = dataList.Where(data => data.Number == number).ToList();
             return filteredList;
         }
+
+
+        public ResultCoordinateData PaginationCoordinateData(int page = 0, int size = 5)
+        {
+            int dataCount = ReadData().Count;
+
+            var allData = ReadData();
+            var data = allData.Skip(page * size).Take(size).ToList();
+
+            return new()
+            {
+                DataCount = dataCount,
+                CoordinateDatas = data
+            };
+
+
+        }
     }
 }
