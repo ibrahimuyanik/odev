@@ -1,0 +1,7 @@
+.custom-dialog {
+    width: 600px; /* İstediğiniz genişliği ayarlayabilirsiniz */
+    height: 400px;
+    padding: 20px;
+    border-radius: 8px;
+    color: white;
+  }

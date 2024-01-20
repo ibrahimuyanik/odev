@@ -1,0 +1,18 @@
+<div class="custom-dialog">
+    <h1 mat-dialog-title>Konumu Eklemek İçin Formu Doldurun</h1>
+    <div class="container">
+        <form [formGroup]="addForm">
+          <label for="name">İsim:</label>
+          <input type="text" id="name" class="form-control" formControlName="name"><br>
+      
+          <label for="number">Numara:</label>
+          <input type="number" id="number" class="form-control" formControlName="number"><br>
+      
+          <button type="button" class="btn btn-primary" (click)="add()">Kaydet</button>
+        </form>
+      </div>
+    <div mat-dialog-actions>
+      <button style="margin-left: auto;" class="btn btn-danger" mat-button mat-dialog-close>Close</button>
+    </div>
+</div>
+
