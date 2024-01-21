@@ -20,11 +20,7 @@ namespace MapAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(CoordinateData data)
         {
-
-            var _data = JsonConvert.SerializeObject(data);
-
-            _fileService.SaveData(_data);
-
+            _fileService.SaveData(data);
             return Ok();
         }
 
@@ -35,25 +31,25 @@ namespace MapAPI.Controllers
             return Ok(data);
         }
 
-        [HttpGet("byName/{name}")]
-        public async Task<IActionResult> ReadByName(string name)
+        [HttpGet("{id}")]
+        public async Task<IActionResult> ReadById(string id)
         {
-            var data = _fileService.ReadDataByName(name);
+            var data = _fileService.GetDataById(id);
             return Ok(data);
         }
 
-        [HttpGet("byNumber/{number}")]
-        public async Task<IActionResult> ReadByNumber(int number)
+        [HttpPut]
+        public async Task<IActionResult> Update(CoordinateData coordinateData)
         {
-            var data = _fileService.ReadDataByNumber(number);
-            return Ok(data);
+            _fileService.UpdateData(coordinateData);
+            return Ok();
         }
 
-        [HttpGet("pagination")]
-        public async Task<IActionResult> ReadDataTable([FromQuery] Pagination pagination)
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(string id)
         {
-            var data = _fileService.PaginationCoordinateData(pagination.Page, pagination.Size);
-            return Ok(data);
+            _fileService.DeleteData(id);
+            return Ok();
         }
 
     }

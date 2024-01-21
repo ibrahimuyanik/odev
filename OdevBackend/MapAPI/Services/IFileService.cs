@@ -4,10 +4,10 @@ namespace MapAPI.Services
 {
     public interface IFileService
     {
-        void SaveData(string data);
+        void SaveData(CoordinateData data);
         List<CoordinateData> ReadData();
-        List<CoordinateData> ReadDataByNumber(int number);
-        List<CoordinateData> ReadDataByName(string name);
-        ResultCoordinateData PaginationCoordinateData(int page = 0, int size = 5);
+        void UpdateData(CoordinateData coordinateData);
+        void DeleteData(string id);
+        CoordinateData GetDataById(string id);
     }
 }

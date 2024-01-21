@@ -14,6 +14,7 @@ import { jsPanel } from 'jspanel4';
 import { JsPanelService } from 'src/app/services/js-panel.service';
 import { DialogService } from 'src/app/services/dialog.service';
 import { AddCoordinateDialogComponent } from 'src/app/dialog/add-coordinate-dialog/add-coordinate-dialog.component';
+import { ListCoordinateDialogComponent } from 'src/app/dialog/list-coordinate-dialog/list-coordinate-dialog.component';
 
 @Component({
   selector: 'app-map',
@@ -128,5 +129,12 @@ export class MapComponent {
     }
   }
 
+
+  show(){
+    this.dialogService.openDialog({
+      componentType: ListCoordinateDialogComponent,
+      data: 1
+    })
+  }
 
 }

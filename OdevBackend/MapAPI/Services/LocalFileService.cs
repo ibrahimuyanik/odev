@@ -12,8 +12,10 @@ namespace MapAPI.Services
             _env = env;
         }
 
-        public void SaveData(string data)
+        public void SaveData(CoordinateData data)
         {
+            data.Id = Guid.NewGuid().ToString();
+            var _data = JsonConvert.SerializeObject(data);
             string path = Path.Combine(_env.WebRootPath, "coordinate-data");
 
             if (!Directory.Exists(path))
@@ -27,7 +29,7 @@ namespace MapAPI.Services
             {
                 using (StreamWriter streamWriter = new StreamWriter(a))
                 {
-                    streamWriter.Write($"{Environment.NewLine}{data}");
+                    streamWriter.Write($"{Environment.NewLine}{_data}");
                 }
             }
         }
@@ -58,36 +60,67 @@ namespace MapAPI.Services
             return dataList;
         }
 
-
-        public List<CoordinateData> ReadDataByName(string name)
+        public void UpdateData(CoordinateData coordinateData)
         {
-            List<CoordinateData> dataList = ReadData();
-            List<CoordinateData> filteredList = dataList.Where(data => data.Name == name).ToList();
-            return filteredList;
-        }
-
-        public List<CoordinateData> ReadDataByNumber(int number)
-        {
-            List<CoordinateData> dataList = ReadData();
-            List<CoordinateData> filteredList = dataList.Where(data => data.Number == number).ToList();
-            return filteredList;
-        }
-
-
-        public ResultCoordinateData PaginationCoordinateData(int page = 0, int size = 5)
-        {
-            int dataCount = ReadData().Count;
-
-            var allData = ReadData();
-            var data = allData.Skip(page * size).Take(size).ToList();
-
-            return new()
+            if (coordinateData != null)
             {
-                DataCount = dataCount,
-                CoordinateDatas = data
-            };
+                var updatedData = new CoordinateData();
 
+                var dataList = ReadData();
 
+                dataList.RemoveAll(x => x.Id == coordinateData.Id);
+
+                updatedData.Id = coordinateData.Id;
+                updatedData.Number = coordinateData.Number;
+                updatedData.Name = coordinateData.Name;
+                updatedData.Coordinates = coordinateData.Coordinates;
+
+                dataList.Add(updatedData);
+
+                SaveDataList(dataList);
+
+            }
         }
+
+        public void DeleteData(string id)
+        {
+            List<CoordinateData> dataList = ReadData();
+
+            // Veriyi sil
+            dataList.RemoveAll(data => data.Id == id);
+
+            // Dosyaya yaz
+            SaveDataList(dataList);
+        }
+
+        public CoordinateData GetDataById(string id)
+        {
+            var dataList = ReadData();
+            return dataList.FirstOrDefault(x => x.Id == id);
+        }
+
+
+
+        private void SaveDataList(List<CoordinateData> dataList)
+        {
+            string path = Path.Combine(_env.WebRootPath, "coordinate-data", "data.txt");
+
+            // Dosyaya yaz
+            using (FileStream a = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.None))
+            {
+                using (StreamWriter streamWriter = new StreamWriter(a))
+                {
+                    foreach (var data in dataList)
+                    {
+                        string jsonData = JsonConvert.SerializeObject(data);
+                        streamWriter.Write($"{Environment.NewLine}{jsonData}");
+                    }
+                }
+            }
+        }
+
+
+
+   
     }
 }

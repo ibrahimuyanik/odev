@@ -28,15 +28,13 @@ const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     await firstValueFrom(observable);
   }
 
-  async paginationData(page:number, size:number, successCallBack?:() => void, errorCallBack?:(errorMessage) => void){
+  async readData(){
 
-    const _apiUrl = `${this.apiUrl}/pagination?page=${page}&size=${size}`;
+    const _apiUrl = `${this.apiUrl}`;
 
-    const observable:Observable<PaginationCoordinateData> = this.httpClient.get<PaginationCoordinateData>(_apiUrl);
+    const observable:Observable<CoordinateData[]> = this.httpClient.get<CoordinateData[]>(_apiUrl);
 
     const promiseData = firstValueFrom(observable);
-    promiseData.then(successCallBack)
-    .catch(errorCallBack)
     return await promiseData;
 
   }
