@@ -1,20 +1,22 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import Map from 'ol/Map';
 import View from 'ol/View';
 import TileLayer from 'ol/layer/Tile';
 import OSM from 'ol/source/OSM';
-import { transform } from 'ol/proj';
+import { fromLonLat, transform } from 'ol/proj';
 import Draw from 'ol/interaction/Draw';
 import VectorLayer from 'ol/layer/Vector';
 import VectorSource from 'ol/source/Vector';
-import { click } from 'ol/events/condition';
-import { LineString, Point, Polygon } from 'ol/geom';
+import {  LineString, Point, Polygon } from 'ol/geom';
 import { ApiService } from 'src/app/services/api.service';
-import { jsPanel } from 'jspanel4';
-import { JsPanelService } from 'src/app/services/js-panel.service';
 import { DialogService } from 'src/app/services/dialog.service';
 import { AddCoordinateDialogComponent } from 'src/app/dialog/add-coordinate-dialog/add-coordinate-dialog.component';
 import { ListCoordinateDialogComponent } from 'src/app/dialog/list-coordinate-dialog/list-coordinate-dialog.component';
+import { CoordinateData } from 'src/app/contracts/coordinate-data.model';
+import Feature from 'ol/Feature';
+import Style from 'ol/style/Style';
+import Fill from 'ol/style/Fill';
+import Stroke from 'ol/style/Stroke';
 
 @Component({
   selector: 'app-map',
@@ -24,15 +26,32 @@ import { ListCoordinateDialogComponent } from 'src/app/dialog/list-coordinate-di
 export class MapComponent {
 
   constructor(private apiService: ApiService,
-    private jsPanelService: JsPanelService,
     private dialogService: DialogService) { }
   map: Map;
+  polygonData:CoordinateData[]
 
+  vectorLayer: VectorLayer<any>;
+  vectorSource: VectorSource;
+
+  async a(){
+   
+    return await this.apiService.readData();
+  }
+  
   ngOnInit() {
     this.initMap();
+    this.loadPolygonDataFromApi()
+    
   }
 
   initMap() {
+
+    this.vectorSource = new VectorSource();
+
+    this.vectorLayer = new VectorLayer({
+      source: this.vectorSource
+    });
+
     const turkeyCenter = transform([35.8617, 38.9637], 'EPSG:4326', 'EPSG:3857');
 
     this.map = new Map({
@@ -40,12 +59,12 @@ export class MapComponent {
       layers: [
         new TileLayer({
           source: new OSM()
-        })
+        }),
       ],
       view: new View({
         center: turkeyCenter,
         zoom: 6
-      })
+      }),
     });
   }
 
@@ -136,5 +155,49 @@ export class MapComponent {
       data: 1
     })
   }
+
+  async loadPolygonDataFromApi() {
+    try {
+      this.polygonData = await this.apiService.readData();
+      this.addPolygonsToMap();
+    } catch (error) {
+      console.error('Error fetching polygon data:', error);
+    }
+  }
+
+  addPolygonsToMap() {
+    const vectorSource = new VectorSource();
+
+    this.polygonData.forEach(item => {
+      const coordinates = item.coordinates[0]
+      const polygon = new Polygon([coordinates]);
+      debugger;
+      const feature = new Feature({
+        geometry: polygon,
+        name: item.name,
+        number: item.number
+      });
+      
+      vectorSource.addFeature(feature);
+      debugger;
+    });
+
+    const vectorLayer = new VectorLayer({
+      source: vectorSource,
+      style: new Style({
+        fill: new Fill({
+          color: 'rgba(255, 0, 0, 0.2)'
+        }),
+        stroke: new Stroke({
+          color: 'red',
+          width: 2
+        })
+      })
+    });
+
+    this.map.addLayer(vectorLayer);
+  }
+  
+
 
 }
