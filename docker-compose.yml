@@ -1,0 +1,17 @@
+version: "3.7"
+services:
+  api:
+    image: iuyanik/odevv:backend
+    container_name: api
+    restart: always
+    ports:
+      - "7295:80"
+  
+  angular:
+    image: iuyanik/odevv:frontend
+    container_name: frontend
+    depends_on:
+      - api
+    ports:
+      - "4200:80"
+    restart: always
