@@ -12,7 +12,7 @@ import { ApiService } from 'src/app/services/api.service';
   templateUrl: 'list-coordinate-dialog.component.html',
 })
 export class ListCoordinateDialogComponent  {
-  displayedColumns: string[] = ['id', 'name', 'number', 'coordinates'];
+  displayedColumns: string[] = ['name', 'number', 'coordinates'];
   dataSource: MatTableDataSource<CoordinateData> = null;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;

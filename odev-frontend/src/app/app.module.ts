@@ -13,6 +13,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableModule } from '@angular/material/table';
+import { ToastrModule } from 'ngx-toastr';
 
 
 @NgModule({
@@ -26,6 +27,7 @@ import { MatTableModule } from '@angular/material/table';
     HttpClientModule,
     BrowserAnimationsModule,
     DialogModule,
+    ToastrModule.forRoot(),
 
     MatDialogModule, MatButtonModule, MatTableModule, MatPaginatorModule, 
   ],

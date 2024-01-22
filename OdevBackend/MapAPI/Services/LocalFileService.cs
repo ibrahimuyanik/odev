@@ -46,7 +46,7 @@ namespace MapAPI.Services
                 {
                     while (!reader.EndOfStream)
                     {
-                        // Her satırdaki JSON verisini model nesnesine çevir
+                        
                         string line = reader.ReadLine();
                         if (!string.IsNullOrWhiteSpace(line))
                         {
@@ -85,11 +85,7 @@ namespace MapAPI.Services
         public void DeleteData(string id)
         {
             List<CoordinateData> dataList = ReadData();
-
-            // Veriyi sil
             dataList.RemoveAll(data => data.Id == id);
-
-            // Dosyaya yaz
             SaveDataList(dataList);
         }
 
@@ -105,7 +101,7 @@ namespace MapAPI.Services
         {
             string path = Path.Combine(_env.WebRootPath, "coordinate-data", "data.txt");
 
-            // Dosyaya yaz
+            
             using (FileStream a = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.None))
             {
                 using (StreamWriter streamWriter = new StreamWriter(a))

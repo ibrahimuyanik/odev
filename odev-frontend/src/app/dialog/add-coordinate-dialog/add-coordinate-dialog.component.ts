@@ -3,6 +3,7 @@ import { BaseDialog } from '../base/base-dialog';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ApiService } from 'src/app/services/api.service';
+import { CustomToastrService, ToastrMessageType, ToastrPosition } from 'src/app/services/custom-toastr.service';
 
 @Component({
   selector: 'app-add-coordinate-dialog',
@@ -14,7 +15,8 @@ export class AddCoordinateDialogComponent extends BaseDialog<AddCoordinateDialog
   constructor(dialogRef:MatDialogRef<AddCoordinateDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data:  any,
     private formBuilder:FormBuilder,
-    private apiService:ApiService){
+    private apiService:ApiService,
+    private toastrService:CustomToastrService){
       super(dialogRef)
     }
 
@@ -40,6 +42,11 @@ export class AddCoordinateDialogComponent extends BaseDialog<AddCoordinateDialog
         console.log(_data)
 
         this.close()
+
+        this.toastrService.message("Veri Kaydedildi", "Başarılı", {
+          messageType: ToastrMessageType.Success,
+          position: ToastrPosition.BottomRight
+        })        
       }
     }
 

@@ -1,6 +1,30 @@
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">Navbar</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item" style="margin-right: 8px;">
+            <button mat-raised-button color="primary" (click)="drawPolygon()">Add Drawing</button><br>
+          </li>
+          <li class="nav-item">
+            <button mat-raised-button color="primary"  (click)="show()">Query Drawing</button>
+          </li>
+        
+        
+        </ul>
+      
+      </div>
+    </div>
+  </nav>
 
 
-<div id="map" class="map"></div>
-<button mat-raised-button color="primary" (click)="drawPolygon()">Add Drawing</button><br>
 
-<button mat-raised-button color="primary" class="mt-3" (click)="show()">Query Drawing</button>
+
+
+
+<div id="map" class="map" style="height: 500px;"></div>
+
+

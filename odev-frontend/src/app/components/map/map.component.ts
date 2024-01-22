@@ -33,14 +33,11 @@ export class MapComponent {
   vectorLayer: VectorLayer<any>;
   vectorSource: VectorSource;
 
-  async a(){
-   
-    return await this.apiService.readData();
-  }
+ 
   
   ngOnInit() {
     this.initMap();
-    this.loadPolygonDataFromApi()
+    this.loadPolygonData()
     
   }
 
@@ -98,55 +95,12 @@ export class MapComponent {
         }
       })
 
-
-
-
-
-
-      // await this.apiService.create(data)
-
     });
 
-    // Çizim işlemi bitmeden önce önceki çizim işlemlerini temizle
-    draw.on('drawstart', (event: any) => {
-      //source.clear();
-    });
+   
   }
 
-  finishDrawing() {
-    // Çizim işlemini devre dışı bırak
-    debugger;
-    const drawInteraction = this.map.getInteractions().getArray()
-      .find(interaction => interaction instanceof Draw) as Draw;
-    if (drawInteraction) {
-      drawInteraction.finishDrawing();
-    }
-  }
 
-  async drawendHandler(event: any) {
-    const drawnFeature = event.feature;
-    let data = drawnFeature.getGeometry().getCoordinates();
-
-    await this.apiService.create(data)
-
-
-
-
-    // Çizilen geometrinin türüne bağlı olarak işlemler yapabilirsiniz
-    if (drawnFeature.getGeometry() instanceof Point) {
-      // Eğer çizilen geometri bir noktaysa
-      const pointCoordinates = drawnFeature.getGeometry().getCoordinates();
-      console.log('Seçilen Noktanın Koordinatları:', pointCoordinates);
-    } else if (drawnFeature.getGeometry() instanceof LineString) {
-      // Eğer çizilen geometri bir çizgi ise
-      const lineCoordinates = drawnFeature.getGeometry().getCoordinates();
-      console.log('Çizilen Çizginin Koordinatları:', lineCoordinates);
-    } else if (drawnFeature.getGeometry() instanceof Polygon) {
-      // Eğer çizilen geometri bir poligon ise
-      const polygonCoordinates = drawnFeature.getGeometry().getCoordinates();
-      console.log('Çizilen Poligonun Koordinatları:', polygonCoordinates);
-    }
-  }
 
 
   show(){
@@ -156,7 +110,7 @@ export class MapComponent {
     })
   }
 
-  async loadPolygonDataFromApi() {
+  async loadPolygonData() {
     try {
       this.polygonData = await this.apiService.readData();
       this.addPolygonsToMap();
